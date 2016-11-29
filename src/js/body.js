@@ -17,11 +17,12 @@
         datepicker = $.fn.datepicker,
         dp = datepicker.Constructor;
 
-    datepicker.Body = function (d, type, opts) {
+    datepicker.Body = function (d, type, opts, index) {
         this.d = d;
         this.type = type;
         this.opts = opts;
         this.$el = $('');
+        this.index = index;
 
         if (this.opts.onlyTimepicker) return;
         this.init();
@@ -226,8 +227,9 @@
 
         _renderTypes: {
             days: function () {
-                var dayNames = this._getDayNamesHtml(this.d.loc.firstDay),
-                    days = this._getDaysHtml(this.d.currentDate);
+                var parsed = dp.getParsedDate(this.d.currentDate),
+                    dayNames = this._getDayNamesHtml(this.d.loc.firstDay),
+                    days = this._getDaysHtml(new Date(parsed.year, parsed.month + this.index, 1));
 
                 this.$cells.html(days);
                 this.$names.html(dayNames)

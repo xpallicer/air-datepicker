@@ -23,6 +23,8 @@
             toggleSelected: true,
             keyboardNav: true,
 
+            calendars: 3,
+
             position: 'bottom left',
             offset: 12,
 
@@ -179,8 +181,24 @@
                 this.$datepicker.addClass('-only-timepicker-');
             }
 
-            this.views[this.currentView] = new $.fn.datepicker.Body(this, this.currentView, this.opts);
-            this.views[this.currentView].show();
+            if (this.opts.calendars > 1) {
+                this.$datepicker.addClass('-multiple-cals-');
+            }
+
+            var i = 0;
+
+            this.views[this.currentView] = [];
+
+            while(i < this.opts.calendars) {
+                this.views[this.currentView].push(new $.fn.datepicker.Body(this, this.currentView, this.opts, i))
+                this.views[this.currentView][i].show();
+                i++;
+            }
+
+            // this.views[this.currentView] = new $.fn.datepicker.Body(this, this.currentView, this.opts);
+            // this.views[this.currentView].show();
+
+
             this.nav = new $.fn.datepicker.Navigation(this, this.opts);
             this.view = this.currentView;
 
@@ -544,7 +562,7 @@
                 }
             }
 
-            _this.views[this.currentView]._render()
+            this._looper(_this.views[this.currentView], '_render');
         },
 
         removeDate: function (date) {
@@ -619,7 +637,7 @@
             this._defineLocale(this.opts.language);
             this.nav._addButtonsIfNeed();
             if (!this.opts.onlyTimepicker) this.nav._render();
-            this.views[this.currentView]._render();
+            this._looper(this.views[this.currentView], '_render');
 
             if (this.elIsInput && !this.opts.inline) {
                 this._setPositionClasses(this.opts.position);
@@ -634,6 +652,10 @@
 
             if (this.opts.onlyTimepicker) {
                 this.$datepicker.addClass('-only-timepicker-');
+            }
+
+            if (this.opts.calendars > 1) {
+                this.$datepicker.addClass('-multiple-cals-');
             }
 
             if (this.opts.timepicker) {
@@ -748,6 +770,7 @@
                 classes = 'datepicker -' + main + '-' + sec + '- -from-' + main + '-';
 
             if (this.visible) classes += ' active';
+            if (this.opts.calendars > 1) classes += ' -multiple-cals-';
 
             this.$datepicker
                 .removeAttr('class')
@@ -1066,7 +1089,7 @@
                     selector += '[data-month="' + d.month + '"][data-date="' + d.date + '"]';
                     break;
             }
-            $cell = this.views[this.currentView].$el.find(selector);
+            $cell = this.$el.find(selector);
 
             return $cell.length ? $cell : $('');
         },
@@ -1277,6 +1300,12 @@
                 date.setMinutes(this.timepicker.minutes);
             }
             this.selectDate(date);
+        },
+
+        _looper: function (arr, method) {
+           arr.forEach(function (el) {
+               el[method]();
+           })
         },
 
         set focused(val) {

@@ -204,9 +204,12 @@
     transition: opacity 0.3s ease, left 0s 0s, -webkit-transform 0.3s ease;
     transition: opacity 0.3s ease, transform 0.3s ease, left 0s 0s;
     transition: opacity 0.3s ease, transform 0.3s ease, left 0s 0s, -webkit-transform 0.3s ease; }
+  .datepicker.-multiple-cals- {
+    width: auto; }
 
 .datepicker-inline .datepicker {
   border-color: #d7d7d7;
+  display: inline-block;
   box-shadow: none;
   position: static;
   left: auto;
@@ -220,6 +223,9 @@
 
 .datepicker--content {
   box-sizing: content-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   padding: 4px; }
   .-only-timepicker- .datepicker--content {
     display: none; }
@@ -262,7 +268,8 @@
     top: calc(50% - 10px / 2); }
 
 .datepicker--body {
-  display: none; }
+  display: none;
+  width: 242px; }
   .datepicker--body.active {
     display: block; }
 

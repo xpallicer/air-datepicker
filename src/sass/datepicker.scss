@@ -49,11 +49,16 @@
     transform: translate(0);
     transition: opacity $datepickerTransitionSpeed $datepickerTransitionEase, transform $datepickerTransitionSpeed $datepickerTransitionEase, left 0s 0s;
   }
+
+  &.-multiple-cals- {
+    width: auto;
+  }
 }
 
 .datepicker-inline {
   .datepicker {
     border-color: map-get($datepickerBorderColor, inline);
+    display: inline-block;
     box-shadow: none;
     position: static;
     left: auto;
@@ -69,6 +74,7 @@
 
 .datepicker--content {
   box-sizing: content-box;
+  display: flex;
   padding: $datepickerPadding;
 
   .-only-timepicker- & {
@@ -142,6 +148,7 @@ $pointerHalfSize: $datepickerPointerSize / 2 - 1;
 
 .datepicker--body {
   display: none;
+  width: 242px;
 
   &.active {
     display: block;
