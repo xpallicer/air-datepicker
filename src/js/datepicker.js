@@ -126,7 +126,7 @@
         }
 
         if (this.opts.calendars > 1) {
-            this.opts.showOtherMonths = false;
+             this.opts.showOtherMonths = false;
         }
 
         this.inited = false;
@@ -1262,7 +1262,7 @@
                     this.maxRange = this.minRange;
                     this.minRange = '';
                 }
-                this.views[this.currentView]._update();
+                this._looper(this.views[this.currentView], '_update');
             }
         },
 
