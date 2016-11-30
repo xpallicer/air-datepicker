@@ -73,7 +73,7 @@
             switch (type) {
                 case 'day':
                     if (parent.isWeekend(d.day)) classes += " -weekend-";
-                    if (d.month != this.d.parsedDate.month) {
+                    if (d.month != this.localViewDate.month) {
                         classes += " -other-month-";
                         if (!opts.selectOtherMonths) {
                             classes += " -disabled-";
@@ -274,6 +274,13 @@
         hide: function () {
             this.$el.removeClass('active');
             this.active = false;
+        },
+
+        get localViewDate(){
+            var viewDate = this.d.parsedDate,
+                index = this.index;
+
+            return dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, viewDate.date))
         },
 
         //  Events

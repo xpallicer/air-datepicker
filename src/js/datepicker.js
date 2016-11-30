@@ -23,7 +23,8 @@
             toggleSelected: true,
             keyboardNav: true,
 
-            calendars: 3,
+            calendars: 1,
+
 
             position: 'bottom left',
             offset: 12,
@@ -122,6 +123,10 @@
 
         if (this.opts.altField) {
             this.$altField = typeof this.opts.altField == 'string' ? $(this.opts.altField) : this.opts.altField;
+        }
+
+        if (this.opts.calendars > 1) {
+            this.opts.showOtherMonths = false;
         }
 
         this.inited = false;
@@ -509,7 +514,7 @@
                 }
             }
 
-            if (newDate) {
+            if (opts.calendars === 1 && newDate) {
                 _this.silent = true;
                 _this.date = newDate;
                 _this.silent = false;
@@ -1343,7 +1348,7 @@
             this.currentDate = val;
 
             if (this.inited && !this.silent) {
-                this.views[this.view]._render();
+                this._looper(this.views[this.view], '_render');
                 this.nav._render();
                 if (this.visible && this.elIsInput) {
                     this.setPosition();

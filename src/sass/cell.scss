@@ -97,6 +97,7 @@
   }
 
   &:empty {
+    visibility: hidden;
     cursor: default;
   }
 }

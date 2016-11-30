@@ -88,6 +88,7 @@
     .datepicker--cell.-selected-.-focus- {
       background: #45bced; }
   .datepicker--cell:empty {
+    visibility: hidden;
     cursor: default; }
 
 .datepicker--days-names {
