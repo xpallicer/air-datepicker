@@ -194,14 +194,13 @@
 
             this.views[this.currentView] = [];
 
-            while(i < this.opts.calendars) {
-                this.views[this.currentView].push(new $.fn.datepicker.Body(this, this.currentView, this.opts, i))
-                this.views[this.currentView][i].show();
-                i++;
-            }
+            this._loopParts(this.views[this.currentView], $.fn.datepicker.Body, this, this.currentView, this.opts)
+            this._looper(this.views[this.currentView], 'show');
+
 
             // this.views[this.currentView] = new $.fn.datepicker.Body(this, this.currentView, this.opts);
             // this.views[this.currentView].show();
+
 
 
             this.nav = new $.fn.datepicker.Navigation(this, this.opts);
@@ -1313,6 +1312,22 @@
            })
         },
 
+        _loopParts: function (arr, object) {
+            var i = 0,
+                args = [].slice.call(arguments, 1);
+
+
+            // Push initial index
+            args.push(0);
+
+            while(i < this.opts.calendars) {
+                args[args.length - 1] = i;
+                var F = object.bind.apply(object, args);
+                arr.push(new F());
+                i++;
+            }
+        },
+
         set focused(val) {
             if (!val && this.focused) {
                 var $cell = this._getCell(this.focused);
@@ -1373,13 +1388,14 @@
 
             if (this.inited) {
                 if (!this.views[val]) {
-                    this.views[val] = new  $.fn.datepicker.Body(this, val, this.opts)
+                    this.views[val] = [];
+                    this._loopParts(this.views[val], $.fn.datepicker.Body, this, val, this.opts);
                 } else {
-                    this.views[val]._render();
+                    this._looper(this.views[val], '_render');
                 }
 
-                this.views[this.prevView].hide();
-                this.views[val].show();
+                this._looper(this.views[this.prevView], 'hide');
+                this._looper(this.views[val], 'show');
                 this.nav._render();
 
                 if (this.opts.onChangeView) {

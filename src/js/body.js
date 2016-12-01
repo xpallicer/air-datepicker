@@ -182,17 +182,17 @@
 
         /**
          * Generates months html
-         * @param {object} date - date instance
+         * @param {object} date - local view date
          * @returns {string}
          * @private
          */
         _getMonthsHtml: function (date) {
             var html = '',
-                d = dp.getParsedDate(date),
                 i = 0;
+            console.log(date.year);
 
             while(i < 12) {
-                html += this._getMonthHtml(new Date(d.year, i));
+                html += this._getMonthHtml(new Date(date.year, i));
                 i++
             }
 
@@ -235,7 +235,7 @@
                 this.$names.html(dayNames)
             },
             months: function () {
-                var html = this._getMonthsHtml(this.d.currentDate);
+                var html = this._getMonthsHtml(this.localViewDate);
 
                 this.$cells.html(html)
             },
@@ -278,9 +278,22 @@
 
         get localViewDate(){
             var viewDate = this.d.parsedDate,
-                index = this.index;
+                index = this.index,
+                date;
 
-            return dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, viewDate.date))
+            switch (this.type) {
+                case  'days':
+                    date = dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, viewDate.date));
+                    break;
+                case 'months':
+                    date = dp.getParsedDate(new Date(viewDate.year + index, 0, 1));
+                    break;
+                case 'years':
+                    date = dp.getParsedDate(new Date(viewDate.year + 10 * index, viewDate.month + index, viewDate.date));
+                    break
+            }
+
+            return date
         },
 
         //  Events
