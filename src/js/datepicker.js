@@ -1306,12 +1306,24 @@
             this.selectDate(date);
         },
 
+        /**
+         * Calls passed method on every array item
+         * @param {array} arr - array of objects
+         * @param {string} method - method to be called
+         * @private
+         */
         _looper: function (arr, method) {
            arr.forEach(function (el) {
                el[method]();
            })
         },
 
+        /**
+         * Creates new instances of passed object and pushes them to array
+         * @param {array} arr - array in which new instances will be pushed
+         * @param {constructor} object
+         * @private
+         */
         _loopParts: function (arr, object) {
             var i = 0,
                 args = [].slice.call(arguments, 1);
