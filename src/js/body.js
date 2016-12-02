@@ -85,7 +85,7 @@
                     html = parent.loc[parent.opts.monthsField][d.month];
                     break;
                 case 'year':
-                    var decade = parent.curDecade;
+                    var decade = this.localDecade;
                     html = d.year;
                     if (d.year < decade[0] || d.year > decade[1]) {
                         classes += ' -other-decade-';
@@ -182,14 +182,13 @@
 
         /**
          * Generates months html
-         * @param {object} date - local view date
+         * @param {object} date - parsed local view date
          * @returns {string}
          * @private
          */
         _getMonthsHtml: function (date) {
             var html = '',
                 i = 0;
-            console.log(date.year);
 
             while(i < 12) {
                 html += this._getMonthHtml(new Date(date.year, i));
@@ -205,9 +204,14 @@
             return '<div class="' + content.classes + '" data-month="' + date.getMonth() + '">' + content.html + '</div>'
         },
 
-        _getYearsHtml: function (date) {
-            var d = dp.getParsedDate(date),
-                decade = dp.getDecade(date),
+        /**
+         * Calculates years view html
+         * @param {Object} localDate - parsed local view date
+         * @returns {string}
+         * @private
+         */
+        _getYearsHtml: function (localDate) {
+            var decade = dp.getDecade(new Date(localDate.year, localDate.month, 1)),
                 firstYear = decade[0] - 1,
                 html = '',
                 i = firstYear;
@@ -240,7 +244,7 @@
                 this.$cells.html(html)
             },
             years: function () {
-                var html = this._getYearsHtml(this.d.currentDate);
+                var html = this._getYearsHtml(this.localViewDate);
 
                 this.$cells.html(html)
             }
@@ -294,6 +298,10 @@
             }
 
             return date
+        },
+
+        get localDecade(){
+            return dp.getDecade(new Date(this.localViewDate.year, 0))
         },
 
         //  Events
