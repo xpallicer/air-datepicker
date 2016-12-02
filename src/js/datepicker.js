@@ -1093,7 +1093,7 @@
                     selector += '[data-month="' + d.month + '"][data-date="' + d.date + '"]';
                     break;
             }
-            $cell = this.$el.find(selector);
+            $cell = this.$datepicker.find(selector);
 
             return $cell.length ? $cell : $('');
         },
