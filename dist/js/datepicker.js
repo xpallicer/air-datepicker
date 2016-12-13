@@ -1,4 +1,5 @@
 ;(function (window, $, undefined) { ;(function () {
+    //TODO Корректный переход с месяцев на дни(если нажал на втором месяце то этот месяц должен отобразиться во втором контейнере, а не в первом)
     var VERSION = '2.2.2',
         pluginName = 'datepicker',
         autoInitSelector = '.datepicker-here',
@@ -615,7 +616,7 @@
             this.selectedDates = [];
             this.minRange = '';
             this.maxRange = '';
-            this.views[this.currentView]._render();
+            this._looper(this.views[this.currentView], '_render');
             this._setInputValue();
             if (this.opts.onSelect) {
                 this._triggerOnChange()
@@ -640,8 +641,8 @@
             this._createShortCuts();
             this._syncWithMinMaxDates();
             this._defineLocale(this.opts.language);
-            this.nav._addButtonsIfNeed();
-            if (!this.opts.onlyTimepicker) this.nav._render();
+            this._looper(this.nav, '_addButtonsIfNeed');
+            if (!this.opts.onlyTimepicker) this._looper(this.nav, '_render');
             this._looper(this.views[this.currentView], '_render');
 
             if (this.elIsInput && !this.opts.inline) {
