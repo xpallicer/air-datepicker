@@ -297,7 +297,7 @@
 /* -------------------------------------------------
     Navigation
    ------------------------------------------------- */
-.datepicker--nav {
+.datepicker--nav-container {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
@@ -307,8 +307,21 @@
   border-bottom: 1px solid #efefef;
   min-height: 32px;
   padding: 4px; }
-  .-only-timepicker- .datepicker--nav {
+  .-only-timepicker- .datepicker--nav-container {
     display: none; }
+
+.datepicker--nav {
+  width: 242px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between; }
+  .datepicker--nav:first-child .datepicker--nav-action:first-child {
+    visibility: visible; }
+  .datepicker--nav:last-child .datepicker--nav-action:last-child {
+    visibility: visible; }
 
 .datepicker--nav-title,
 .datepicker--nav-action {
@@ -329,7 +342,8 @@
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
-          user-select: none; }
+          user-select: none;
+  visibility: hidden; }
   .datepicker--nav-action:hover {
     background: #f0f0f0; }
   .datepicker--nav-action.-disabled- {

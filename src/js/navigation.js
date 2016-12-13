@@ -1,16 +1,18 @@
 ;(function () {
-    var template = '' +
-        '<div class="datepicker--nav-action" data-action="prev">#{prevHtml}</div>' +
-        '<div class="datepicker--nav-title">#{title}</div>' +
-        '<div class="datepicker--nav-action" data-action="next">#{nextHtml}</div>',
+    var baseTemplate = '<div class="datepicker--nav"></div>',
+        template = '' +
+            '<div class="datepicker--nav-action" data-action="prev">#{prevHtml}</div>' +
+            '<div class="datepicker--nav-title">#{title}</div>' +
+            '<div class="datepicker--nav-action" data-action="next">#{nextHtml}</div>',
         buttonsContainerTemplate = '<div class="datepicker--buttons"></div>',
         button = '<span class="datepicker--button" data-action="#{action}">#{label}</span>',
         datepicker = $.fn.datepicker,
         dp = datepicker.Constructor;
 
-    datepicker.Navigation = function (d, opts) {
+    datepicker.Navigation = function (d, opts, index) {
         this.d = d;
         this.opts = opts;
+        this.index = index;
 
         this.$buttonsContainer = '';
 
@@ -24,13 +26,14 @@
         },
 
         _bindEvents: function () {
-            this.d.$nav.on('click', '.datepicker--nav-action', $.proxy(this._onClickNavButton, this));
-            this.d.$nav.on('click', '.datepicker--nav-title', $.proxy(this._onClickNavTitle, this));
+            this.$container.on('click', '.datepicker--nav-action', $.proxy(this._onClickNavButton, this));
+            this.$container.on('click', '.datepicker--nav-title', $.proxy(this._onClickNavTitle, this));
             this.d.$datepicker.on('click', '.datepicker--button', $.proxy(this._onClickNavButton, this));
         },
 
         _buildBaseHtml: function () {
             if (!this.opts.onlyTimepicker) {
+                this.$container =  $(baseTemplate).appendTo(this.d.$nav);
                 this._render();
             }
             this._addButtonsIfNeed();
@@ -46,9 +49,9 @@
         },
 
         _render: function () {
-            var title = this._getTitle(this.d.currentDate),
+            var title = this._getTitle(this.localViewDate.dateObject),
                 html = dp.template(template, $.extend({title: title}, this.opts));
-            this.d.$nav.html(html);
+            this.$container.html(html);
             if (this.d.view == 'years') {
                 $('.datepicker--nav-title', this.d.$nav).addClass('-disabled-');
             }
@@ -122,6 +125,26 @@
 
         _activateNav: function (nav) {
             $('[data-action="' + nav + '"]', this.d.$nav).removeClass('-disabled-')
+        },
+
+        get localViewDate() {
+            var viewDate = this.d.parsedDate,
+                index = this.index,
+                date;
+
+            switch (this.d.view) {
+                case  'days':
+                    date = dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, viewDate.date));
+                    break;
+                case 'months':
+                    date = dp.getParsedDate(new Date(viewDate.year + index, 0, 1));
+                    break;
+                case 'years':
+                    date = dp.getParsedDate(new Date(viewDate.year + 10 * index, viewDate.month + index, viewDate.date));
+                    break
+            }
+
+            return date
         },
 
         _onClickNavButton: function (e) {

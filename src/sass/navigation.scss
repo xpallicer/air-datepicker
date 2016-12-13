@@ -4,7 +4,7 @@
     Navigation
    ------------------------------------------------- */
 
-.datepicker--nav {
+.datepicker--nav-container {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid map_get($datepickerBorderColor, nav);
@@ -13,6 +13,27 @@
 
   .-only-timepicker- & {
     display: none;
+  }
+}
+
+.datepicker--nav {
+  width: $datepickerBodyWidth;
+  display: flex;
+  justify-content: space-between;
+
+  &:first-child {
+    .datepicker--nav-action {
+      &:first-child {
+        visibility: visible;
+      }
+    }
+  }
+  &:last-child {
+    .datepicker--nav-action {
+      &:last-child {
+        visibility: visible;
+      }
+    }
   }
 }
 
@@ -28,6 +49,7 @@
   width: $datepickerDayCellSize;
   border-radius: $datepickerBorderRadius;
   user-select: none;
+  visibility: hidden;
 
   &:hover {
     background: map_get($datepickerBG, hover);

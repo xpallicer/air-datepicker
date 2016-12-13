@@ -7,7 +7,7 @@
         baseTemplate = '' +
             '<div class="datepicker">' +
             '<i class="datepicker--pointer"></i>' +
-            '<nav class="datepicker--nav"></nav>' +
+            '<div class="datepicker--nav-container"></div>' +
             '<div class="datepicker--content"></div>' +
             '</div>',
         defaults = {
@@ -203,7 +203,8 @@
 
 
 
-            this.nav = new $.fn.datepicker.Navigation(this, this.opts);
+            this.nav = [];
+            this._loopParts(this.nav, $.fn.datepicker.Navigation, this, this.opts);
             this.view = this.currentView;
 
             this.$el.on('clickCell.adp', this._onClickCell.bind(this));
@@ -304,7 +305,7 @@
 
             this.$datepicker = $(baseTemplate).appendTo($appendTarget);
             this.$content = $('.datepicker--content', this.$datepicker);
-            this.$nav = $('.datepicker--nav', this.$datepicker);
+            this.$nav = $('.datepicker--nav-container', this.$datepicker);
         },
 
         _triggerOnChange: function () {
@@ -1320,6 +1321,7 @@
 
         /**
          * Creates new instances of passed object and pushes them to array
+         * Passes index as last argument
          * @param {array} arr - array in which new instances will be pushed
          * @param {constructor} object
          * @private
@@ -1376,7 +1378,7 @@
 
             if (this.inited && !this.silent) {
                 this._looper(this.views[this.view], '_render');
-                this.nav._render();
+                this._looper(this.nav, '_render');
                 if (this.visible && this.elIsInput) {
                     this.setPosition();
                 }
@@ -1408,7 +1410,7 @@
 
                 this._looper(this.views[this.prevView], 'hide');
                 this._looper(this.views[val], 'show');
-                this.nav._render();
+                this._looper(this.nav, '_render');
 
                 if (this.opts.onChangeView) {
                     this.opts.onChangeView(val)
@@ -1460,7 +1462,8 @@
             hours: date.getHours(),
             fullHours:  date.getHours() < 10 ? '0' + date.getHours() :  date.getHours() ,
             minutes: date.getMinutes(),
-            fullMinutes:  date.getMinutes() < 10 ? '0' + date.getMinutes() :  date.getMinutes()
+            fullMinutes:  date.getMinutes() < 10 ? '0' + date.getMinutes() :  date.getMinutes(),
+            dateObject: date
         }
     };
 

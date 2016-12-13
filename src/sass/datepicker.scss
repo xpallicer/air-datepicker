@@ -148,7 +148,7 @@ $pointerHalfSize: $datepickerPointerSize / 2 - 1;
 
 .datepicker--body {
   display: none;
-  width: 242px;
+  width: $datepickerBodyWidth;
 
   &.active {
     display: block;
