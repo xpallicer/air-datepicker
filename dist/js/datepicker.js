@@ -25,7 +25,7 @@
             keyboardNav: true,
 
             calendars: 1,
-
+            adaptiveOrder: true,
 
             position: 'bottom left',
             offset: 12,
@@ -589,7 +589,7 @@
                         _this.lastSelectedDate = _this.selectedDates[_this.selectedDates.length - 1];
                     }
 
-                    _this.views[_this.currentView]._render();
+                    _this._looper(_this.views[_this.currentView], '_render');
                     _this._setInputValue();
 
                     if (_this.opts.onSelect) {
@@ -870,12 +870,12 @@
             }
         },
 
-        down: function (date) {
-            this._changeView(date, 'down');
+        down: function (date,index) {
+            this._changeView(date, 'down', -index);
         },
 
-        up: function (date) {
-            this._changeView(date, 'up');
+        up: function (date,index) {
+            this._changeView(date, 'up', -index);
         },
 
         _bindVisionEvents: function (event) {
@@ -884,15 +884,37 @@
             this.$datepicker.one('transitionend.dp', event.bind(this, this, true))
         },
 
-        _changeView: function (date, dir) {
+        /**
+         * Changes view of datepicker.
+         * @param [date] {Date} - desirable view date
+         * @param dir {string} - up or down
+         * @param index {number} - index of datepikcer, if there is more than 1 calendars
+         * @private
+         */
+        _changeView: function (date, dir, index) {
             date = date || this.focused || this.date;
+
+            var month = date.getMonth(),
+                year = date.getFullYear();
 
             var nextView = dir == 'up' ? this.viewIndex + 1 : this.viewIndex - 1;
             if (nextView > 2) nextView = 2;
             if (nextView < 0) nextView = 0;
 
+            // Change month and year for proper calendar order in multiple calendar mode
+            if (this.opts.adaptiveOrder) {
+                if (nextView == 0) {
+                    month = month + index
+                } else if (nextView == 1) {
+                    year = year + index
+                } else {
+                    year = year + index - 10
+                }
+            }
+
+
             this.silent = true;
-            this.date = new Date(date.getFullYear(), date.getMonth(), 1);
+            this.date = new Date(year, month, 1);
             this.silent = false;
             this.view = this.viewIndexes[nextView];
 
@@ -1336,6 +1358,7 @@
             args.push(0);
 
             while(i < this.opts.calendars) {
+                // Pass all arguments to creating part, and add ordinal index as last argument
                 args[args.length - 1] = i;
                 var F = object.bind.apply(object, args);
                 arr.push(new F());
@@ -1874,7 +1897,7 @@
                 dp = this.d;
             // Change view if min view does not reach yet
             if (dp.view != this.opts.minView) {
-                dp.down(new Date(year, month, date));
+                dp.down(new Date(year, month, date), this.index);
                 return;
             }
             // Select date if min view is reached
@@ -1942,6 +1965,7 @@
         },
 
         _addButtonsIfNeed: function () {
+            if (this.index > 0) return;
             if (this.opts.todayButton) {
                 this._addButton('today')
             }
@@ -2059,11 +2083,7 @@
         _onClickNavTitle: function (e) {
             if ($(e.target).hasClass('-disabled-')) return;
 
-            if (this.d.view == 'days') {
-                return this.d.view = 'months'
-            }
-
-            this.d.view = 'years';
+            this.d.up('', this.index);
         }
     }
 

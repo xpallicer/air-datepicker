@@ -314,7 +314,7 @@
                 dp = this.d;
             // Change view if min view does not reach yet
             if (dp.view != this.opts.minView) {
-                dp.down(new Date(year, month, date));
+                dp.down(new Date(year, month, date), this.index);
                 return;
             }
             // Select date if min view is reached

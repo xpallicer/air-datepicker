@@ -40,6 +40,7 @@
         },
 
         _addButtonsIfNeed: function () {
+            if (this.index > 0) return;
             if (this.opts.todayButton) {
                 this._addButton('today')
             }
@@ -157,11 +158,7 @@
         _onClickNavTitle: function (e) {
             if ($(e.target).hasClass('-disabled-')) return;
 
-            if (this.d.view == 'days') {
-                return this.d.view = 'months'
-            }
-
-            this.d.view = 'years';
+            this.d.up('', this.index);
         }
     }
 
