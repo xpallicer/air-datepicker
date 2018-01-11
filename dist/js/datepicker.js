@@ -1628,6 +1628,10 @@
             this.$el = $(templates[this.type]).appendTo(this.d.$content);
             this.$names = $('.datepicker--days-names', this.$el);
             this.$cells = $('.datepicker--cells', this.$el);
+
+            if (this.opts.calendars == this.index+1) {
+                this.$el.addClass('-last-');
+            }
         },
 
         _getDayNamesHtml: function (firstDay, curDay, html, i) {

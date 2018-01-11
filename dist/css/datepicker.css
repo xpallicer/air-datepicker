@@ -190,9 +190,9 @@
     .datepicker.-multiple-cals- .datepicker--body {
       margin-right: 14px;
       position: relative; }
-      .datepicker.-multiple-cals- .datepicker--body:last-child {
+      .datepicker.-multiple-cals- .datepicker--body.-last- {
         margin-right: 0; }
-        .datepicker.-multiple-cals- .datepicker--body:last-child:after {
+        .datepicker.-multiple-cals- .datepicker--body.-last-:after {
           display: none; }
       .datepicker.-multiple-cals- .datepicker--body:after {
         content: '';
