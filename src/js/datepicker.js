@@ -870,12 +870,12 @@
             }
         },
 
-        down: function (date,index) {
-            this._changeView(date, 'down', -index);
+        down: function (date, index) {
+            this._changeView(date, 'down', index);
         },
 
         up: function (date,index) {
-            this._changeView(date, 'up', -index);
+            this._changeView(date, 'up', index);
         },
 
         _bindVisionEvents: function (event) {
@@ -902,13 +902,14 @@
             if (nextView < 0) nextView = 0;
 
             // Change month and year for proper calendar order in multiple calendar mode
-            if (this.opts.adaptiveOrder) {
+            // TODO сделать, что бы работало с клавы
+            if (this.opts.adaptiveOrder && index != undefined) {
                 if (nextView == 0) {
-                    month = month + index
+                    month = month - index
                 } else if (nextView == 1) {
-                    year = year + index
+                    year = year - index
                 } else {
-                    year = year + index - 10
+                    year = year - index - 10
                 }
             }
 

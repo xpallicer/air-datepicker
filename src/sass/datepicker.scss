@@ -52,6 +52,30 @@
 
   &.-multiple-cals- {
     width: auto;
+
+    .datepicker--body {
+      margin-right: $datepickerMultipleCalsGutter;
+      position: relative;
+
+      &:last-child {
+        margin-right: 0;
+
+        &:after {
+          display: none;
+        }
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        width: 1px;
+        right: -$datepickerMultipleCalsGutter / 2;
+        top: -$datepickerPadding;
+        bottom: -$datepickerPadding;
+        background: map-get($datepickerBorderColor, nav);
+      }
+
+    }
   }
 }
 

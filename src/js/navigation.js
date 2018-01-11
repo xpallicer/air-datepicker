@@ -135,13 +135,13 @@
 
             switch (this.d.view) {
                 case  'days':
-                    date = dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, viewDate.date));
+                    date = dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, 1));
                     break;
                 case 'months':
                     date = dp.getParsedDate(new Date(viewDate.year + index, 0, 1));
                     break;
                 case 'years':
-                    date = dp.getParsedDate(new Date(viewDate.year + 10 * index, viewDate.month + index, viewDate.date));
+                    date = dp.getParsedDate(new Date(viewDate.year + 10 * index, viewDate.month + index, 1));
                     break
             }
 

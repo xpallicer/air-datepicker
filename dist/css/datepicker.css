@@ -187,6 +187,21 @@
     transition: opacity 0.3s ease, transform 0.3s ease, left 0s 0s; }
   .datepicker.-multiple-cals- {
     width: auto; }
+    .datepicker.-multiple-cals- .datepicker--body {
+      margin-right: 14px;
+      position: relative; }
+      .datepicker.-multiple-cals- .datepicker--body:last-child {
+        margin-right: 0; }
+        .datepicker.-multiple-cals- .datepicker--body:last-child:after {
+          display: none; }
+      .datepicker.-multiple-cals- .datepicker--body:after {
+        content: '';
+        position: absolute;
+        width: 1px;
+        right: -7px;
+        top: -4px;
+        bottom: -4px;
+        background: #efefef; }
 
 .datepicker-inline .datepicker {
   border-color: #d7d7d7;

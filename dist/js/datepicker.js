@@ -870,12 +870,12 @@
             }
         },
 
-        down: function (date,index) {
-            this._changeView(date, 'down', -index);
+        down: function (date, index) {
+            this._changeView(date, 'down', index);
         },
 
         up: function (date,index) {
-            this._changeView(date, 'up', -index);
+            this._changeView(date, 'up', index);
         },
 
         _bindVisionEvents: function (event) {
@@ -902,13 +902,14 @@
             if (nextView < 0) nextView = 0;
 
             // Change month and year for proper calendar order in multiple calendar mode
-            if (this.opts.adaptiveOrder) {
+            // TODO сделать, что бы работало с клавы
+            if (this.opts.adaptiveOrder && index != undefined) {
                 if (nextView == 0) {
-                    month = month + index
+                    month = month - index
                 } else if (nextView == 1) {
-                    year = year + index
+                    year = year - index
                 } else {
-                    year = year + index - 10
+                    year = year - index - 10
                 }
             }
 
@@ -1863,20 +1864,22 @@
             this.active = false;
         },
 
+        //TODO Вынести в статичные методы
         get localViewDate(){
             var viewDate = this.d.parsedDate,
                 index = this.index,
                 date;
 
+            //TODO Проверить нормально ли будет работать, если брать 1 число, а не то, что выбрано в оригинальном календаре
             switch (this.type) {
                 case  'days':
-                    date = dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, viewDate.date));
+                    date = dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, 1));
                     break;
                 case 'months':
                     date = dp.getParsedDate(new Date(viewDate.year + index, 0, 1));
                     break;
                 case 'years':
-                    date = dp.getParsedDate(new Date(viewDate.year + 10 * index, viewDate.month + index, viewDate.date));
+                    date = dp.getParsedDate(new Date(viewDate.year + 10 * index, viewDate.month + index, 1));
                     break
             }
 
@@ -2060,13 +2063,13 @@
 
             switch (this.d.view) {
                 case  'days':
-                    date = dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, viewDate.date));
+                    date = dp.getParsedDate(new Date(viewDate.year, viewDate.month + index, 1));
                     break;
                 case 'months':
                     date = dp.getParsedDate(new Date(viewDate.year + index, 0, 1));
                     break;
                 case 'years':
-                    date = dp.getParsedDate(new Date(viewDate.year + 10 * index, viewDate.month + index, viewDate.date));
+                    date = dp.getParsedDate(new Date(viewDate.year + 10 * index, viewDate.month + index, 1));
                     break
             }
 
