@@ -1040,14 +1040,16 @@
             type = type || this.cellType;
 
             var date = datepicker.getParsedDate(this._getFocusedDate()),
+                opts = this.opts,
                 y = date.year,
                 m = date.month,
-                d = date.date;
+                d = date.date,
+                day = date.day,
+                shouldGoToNextMonth = opts.calendars > 1 && this._isLastWeekDay(day);
 
             if (this._isHotKeyPressed()){
                 return;
             }
-
             switch(keyCode) {
                 case 37: // left
                     type == 'day' ? (d -= 1) : '';
@@ -1060,7 +1062,7 @@
                     type == 'year' ? (y -= 4) : '';
                     break;
                 case 39: // right
-                    type == 'day' ? (d += 1) : '';
+                    type == 'day' ? shouldGoToNextMonth ? d += d + 1 : (d += 1) : '';
                     type == 'month' ? (m += 1) : '';
                     type == 'year' ? (y += 1) : '';
                     break;
@@ -1165,6 +1167,11 @@
                     this.timepicker.update();
                 }
             }
+        },
+
+        _isLastWeekDay:function (day) {
+            var lastDay = Math.abs(7 - (this.loc.firstDay + 6));
+            return day === lastDay;
         },
 
         _onShowEvent: function (e) {
