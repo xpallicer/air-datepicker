@@ -280,7 +280,7 @@
             if (this.loc.timeFormat.match(boundary('aa')) ||
                 this.loc.timeFormat.match(boundary('AA'))
             ) {
-               this.ampm = true;
+                this.ampm = true;
             }
         },
 
@@ -329,9 +329,9 @@
                     parsedSelected.minutes
                 );
 
-                formattedDates = selectedDates.map(function (date) {
-                    return _this.formatDate(_this.loc.dateFormat, date)
-                }).join(this.opts.multipleDatesSeparator);
+            formattedDates = selectedDates.map(function (date) {
+                return _this.formatDate(_this.loc.dateFormat, date)
+            }).join(this.opts.multipleDatesSeparator);
 
             // Create new dates array, to separate it from original selectedDates
             if (this.opts.multipleDates || this.opts.range) {
@@ -1045,7 +1045,7 @@
                 m = date.month,
                 d = date.date,
                 day = date.day,
-                shouldGoToNextMonth = opts.calendars > 1 && this._isLastWeekDay(day);
+                shouldGoToNextMonth = opts.calendars > 1 && this._isLastWeekDay(this._getFocusedDate());
 
             if (this._isHotKeyPressed()){
                 return;
@@ -1062,7 +1062,14 @@
                     type == 'year' ? (y -= 4) : '';
                     break;
                 case 39: // right
-                    type == 'day' ? shouldGoToNextMonth ? d += d + 1 : (d += 1) : '';
+                    if (type == 'day') {
+                        if (shouldGoToNextMonth) {
+                            d = this._getDaysAtWeek(this._getWeekNumber(this._getFocusedDate()), m+1, y)[0];
+                            m += 1;
+                        } else {
+                            d += 1;
+                        }
+                    }
                     type == 'month' ? (m += 1) : '';
                     type == 'year' ? (y += 1) : '';
                     break;
@@ -1169,9 +1176,12 @@
             }
         },
 
-        _isLastWeekDay:function (day) {
-            var lastDay = Math.abs(7 - (this.loc.firstDay + 6));
-            return day === lastDay;
+        _isLastWeekDay:function (date) {
+            var day = date.getDay(),
+                lastDay = Math.abs(7 - (this.loc.firstDay + 6)),
+                totalDays = datepicker.getDaysCount(date);
+
+            return day === lastDay || date.getDate() == totalDays;
         },
 
         _onShowEvent: function (e) {
@@ -1345,9 +1355,9 @@
          * @private
          */
         _looper: function (arr, method) {
-           arr.forEach(function (el) {
-               el[method]();
-           })
+            arr.forEach(function (el) {
+                el[method]();
+            })
         },
 
         /**
@@ -1372,6 +1382,53 @@
                 arr.push(new F());
                 i++;
             }
+        },
+
+        /**
+         * Calculates week number in @date month
+         * @param {Date} date
+         * @returns {number} - week number of month
+         * @private
+         */
+        _getWeekNumber: function (date) {
+            var parsed = datepicker.getParsedDate(date),
+                firstDay = new Date(parsed.year, parsed.month, 1).getDay(),
+                fromPrev = this._getDaysFromPrevMonth(date);
+
+            return Math.ceil((parsed.date + fromPrev) / 7);
+        },
+
+        /**
+         * Calculates first and last dates relative to week number of month
+         * @param {number} weekNum - week number
+         * @param {number} month - month number
+         * @param {number} year - year number
+         * @returns {array} - contains of two number - first date and last date in the week
+         * @private
+         */
+        _getDaysAtWeek: function (weekNum, month, year) {
+            var date = new Date(year, month, 1),
+                totalDays = datepicker.getDaysCount(date),
+                fromPrev = this._getDaysFromPrevMonth(date),
+                lastWeekDay = weekNum * 7 - fromPrev,
+                lastWeekDayNumber,
+                dayPasted,
+                firstWeekDay;
+
+            lastWeekDay = lastWeekDay > totalDays ? totalDays: lastWeekDay;
+            lastWeekDayNumber = new Date(year, month, lastWeekDay).getDay();
+            dayPasted = lastWeekDayNumber - this.loc.firstDay < 0 ? lastWeekDayNumber - this.loc.firstDay + 7 : lastWeekDayNumber - this.loc.firstDay;
+            firstWeekDay = lastWeekDay - dayPasted;
+
+            return [firstWeekDay <= 0 ? 1 : firstWeekDay, lastWeekDay];
+        },
+
+        _getDaysFromPrevMonth: function (date) {
+            date.setDate(1);
+            var firstDay = date.getDay(),
+                fromPrev = firstDay - this.loc.firstDay;
+
+            return fromPrev < 0 ? fromPrev + 7 : fromPrev;
         },
 
         set focused(val) {
@@ -1541,6 +1598,9 @@
     datepicker.getLeadingZeroNum = function (num) {
         return parseInt(num) < 10 ? '0' + num : num;
     };
+
+
+
 
     /**
      * Returns copy of date with hours and minutes equals to 0
