@@ -515,11 +515,11 @@
                 }
             }
 
-            if (opts.calendars === 1 && newDate) {
+            if (newDate) {
                 _this.silent = true;
                 _this.date = newDate;
                 _this.silent = false;
-                _this.nav._render()
+                _this._looper(_this.nav, '_render');
             }
 
             if (opts.multipleDates && !opts.range) { // Set priority to range functionality
